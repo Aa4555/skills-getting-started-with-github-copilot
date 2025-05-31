@@ -41,8 +41,59 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // Handle form submission
-  signupForm.addEventListener("submit", async (event) => {
+  // Fetch and display activities
+  async function loadActivities() {
+    const response = await fetch('/activities');
+    const activities = await response.json();
+    const container = document.getElementById('activities');
+    container.innerHTML = '';
+    Object.entries(activities).forEach(([name, info]) => {
+        const div = document.createElement('div');
+        div.className = 'activity';
+        div.innerHTML = `
+            <h3>${name}</h3>
+            <p>${info.description}</p>
+            <p><strong>Schedule:</strong> ${info.schedule}</p>
+            <p><strong>Participants:</strong> ${info.participants.length}/${info.max_participants}</p>
+            <input type="email" placeholder="Your email" id="email-${name}">
+            <button onclick="signup('${name}')">Sign Up</button>
+            <div id="msg-${name}" class="msg"></div>
+        `;
+        container.appendChild(div);
+    });
+}
+
+// Sign up for an activity
+async function signup(activityName) {
+    const emailInput = document.getElementById(`email-${activityName}`);
+    const msgDiv = document.getElementById(`msg-${activityName}`);
+    const email = emailInput.value.trim();
+    if (!email) {
+        msgDiv.textContent = "Please enter your email.";
+        msgDiv.style.color = "red";
+        return;
+    }
+    try {
+        const response = await fetch(`/activities/${encodeURIComponent(activityName)}/signup?email=${encodeURIComponent(email)}`, {
+            method: 'POST'
+        });
+        const data = await response.json();
+        if (response.ok) {
+            msgDiv.textContent = data.message;
+            msgDiv.style.color = "green";
+            loadActivities();
+        } else {
+            msgDiv.textContent = data.detail || "Signup failed.";
+            msgDiv.style.color = "red";
+        }
+    } catch (err) {
+        msgDiv.textContent = "Network error.";
+        msgDiv.style.color = "red";
+    }
+}
+
+// Handle form submission
+signupForm.addEventListener("submit", async (event) => {
     event.preventDefault();
 
     const email = document.getElementById("email").value;
@@ -83,4 +134,5 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Initialize app
   fetchActivities();
+  loadActivities();
 });

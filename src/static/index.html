@@ -8,13 +8,12 @@
   </head>
   <body>
     <header>
-      <h1>Mergington High School</h1>
-      <h2>Extracurricular Activities</h2>
+      <h1>Mergington High School Activities</h1>
     </header>
 
     <main>
       <section id="activities-container">
-        <h3>Available Activities</h3>
+        <h2>Available Activities</h2>
         <div id="activities-list">
           <!-- Activities will be loaded here -->
           <p>Loading activities...</p>
@@ -22,22 +21,29 @@
       </section>
 
       <section id="signup-container">
-        <h3>Sign Up for an Activity</h3>
+        <h2>Sign Up for an Activity</h2>
         <form id="signup-form">
           <div class="form-group">
-            <label for="email">Student Email:</label>
-            <input type="email" id="email" required placeholder="your-email@mergington.edu" />
-          </div>
-          <div class="form-group">
-            <label for="activity">Select Activity:</label>
+            <label for="activity">Activity:</label>
             <select id="activity" required>
-              <option value="">-- Select an activity --</option>
+              <option value="" disabled selected>Select an activity</option>
               <!-- Activity options will be loaded here -->
             </select>
+          </div>
+          <div class="form-group">
+            <label for="email">Your Email:</label>
+            <input type="email" id="email" required placeholder="your-email@mergington.edu" />
           </div>
           <button type="submit">Sign Up</button>
         </form>
         <div id="message" class="hidden"></div>
+      </section>
+
+      <section id="quick-signup-container">
+        <h2>Quick Signup</h2>
+        <div id="activities">
+          <!-- Quick signup activities will be loaded here -->
+        </div>
       </section>
     </main>
 
